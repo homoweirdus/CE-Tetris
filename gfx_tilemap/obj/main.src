@@ -1,0 +1,3713 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -nomodsect -optspeed -noreduceopt -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"..\..\..\DOCUME~1\GFX_TI~1\SRC\MAIN.C"
+	.assume ADL=1
+	SEGMENT CODE
+;    1	#include <stdbool.h>
+;    2	#include <stddef.h>
+;    3	#include <stdint.h>
+;    4	#include <tice.h>
+;    5	
+;    6	#include <math.h>
+;    7	#include <stdio.h>
+;    8	#include <stdlib.h>
+;    9	#include <string.h>
+;   10	
+;   11	#include "gfx/blockone.h"
+;   12	#include <graphx.h>
+;   13	/* Include the graphics */
+;   14	#include "gfx/tiles_gfx.h"
+;   15	
+;   16	/* Include the external map data */
+;   17	extern uint8_t tilemap_map[];
+;   18	
+;   19	/* Tilemap defines */
+;   20	#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+;   21	#define TILE_WIDTH          16
+;   22	#define TILE_HEIGHT         16
+;   23	
+;   24	#define TILEMAP_WIDTH       19
+;   25	#define TILEMAP_HEIGHT		14
+;   26	
+;   27	#define TILEMAP_DRAW_WIDTH  19
+;   28	#define TILEMAP_DRAW_HEIGHT 14
+;   29	
+;   30	#define Y_OFFSET            0
+;   31	#define X_OFFSET            0
+;   32	#define ONE_SECOND         32768/1
+;   33	void piecedraw(signed int *xarr, signed int *yarr, int ex, int why);
+;   34	void setp(signed int *xar, signed int *yar, int num);
+;   35	void main(void) {
+_main:
+	LD	HL,-405
+	CALL	__frameset
+;   36	    sk_key_t key;
+;   37		int alive = 1;
+	LD	BC,1
+	LD	(IX+-119),BC
+;   38	    unsigned int x = 160;
+	LD	BC,160
+	LD	(IX+-27),BC
+;   39	    unsigned int y = 0;
+	LD	BC,0
+	LD	(IX+-48),BC
+;   40		signed int b1x = 0;
+;   41		signed int b1y = 0;
+;   42		signed int xlist[4];
+;   43		signed int ylist[4];
+;   44		signed int hx[] = { 8,0,0,0 };
+	LD	HL,IX
+	LD	BC,-284
+	ADD	HL,BC
+	LD	DE,HL
+	LD	HL,_0temp0
+	LD	BC,12
+	LDIR	
+;   45		signed int hy[4];
+;   46		signed int nxl[4];
+;   47		signed int nyl[4];
+;   48		signed int nxlt[4];
+;   49		signed int nylt[4];
+;   50		signed int nxll[4];
+;   51		signed int nyll[4];
+;   52	
+;   53		//int debugnum;
+;   54		unsigned int score = 0;
+;   55		int curline = 13;
+;   56		uint8_t current = 0x01;
+;   57		int er = 0;
+;   58		int linenow;
+;   59		int curx;
+;   60		int hh = 0;
+;   61		int linelist[] = { 0,0,0,0 };
+	LD	HL,_1temp1
+	LD	BC,12
+	LD	DE,0
+	LD	(IX+-57),DE
+	LD	(IX+-83),DE
+	LEA	DE,IX+-77
+	LDIR	
+;   62		unsigned int seconds = 0;
+	LD	BC,0
+	LD	(IX+-80),BC
+;   63		signed int temp;
+;   64	    gfx_tilemap_t tilemap;
+;   65		
+;   66	    /* Initialize the tilemap structure */
+;   67	    tilemap.map         = tilemap_map;
+	LD	BC,_tilemap_map
+	LD	(IX+-45),BC
+;   68	    tilemap.tiles       = set_tiles;
+	LD	BC,_set_tiles_data
+	LD	(IX+-42),BC
+;   69	    tilemap.type_width  = gfx_tile_16_pixel;
+	LD	(IX+-35),4
+;   70	    tilemap.type_height = gfx_tile_16_pixel;
+	LD	(IX+-34),4
+;   71	    tilemap.tile_height = TILE_HEIGHT;
+	LD	(IX+-39),16
+;   72	    tilemap.tile_width  = TILE_WIDTH;
+	LD	(IX+-38),16
+;   73	    tilemap.draw_height = TILEMAP_DRAW_HEIGHT;
+	LD	(IX+-37),14
+;   74	    tilemap.draw_width  = TILEMAP_DRAW_WIDTH;
+	LD	(IX+-36),19
+;   75	    tilemap.height      = TILEMAP_HEIGHT;
+	LD	(IX+-33),14
+;   76	    tilemap.width       = TILEMAP_WIDTH;
+	LD	(IX+-32),19
+;   77	    tilemap.y_loc       = Y_OFFSET;
+	LD	(IX+-31),0
+;   78	    tilemap.x_loc       = X_OFFSET;
+	LD	BC,0
+	LD	(IX+-30),BC
+;   79		srand(rtc_Time());
+	LD	BC,(15925316)
+	PUSH	BC
+	CALL	_srand
+	POP	BC
+;   80		setp(xlist, ylist, 7);
+	LD	BC,7
+	PUSH	BC
+	PEA	IX+-24
+	PEA	IX+-12
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;   81		setp(nxll, nyll, 7);
+	LD	BC,7
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-296
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-248
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;   82		setp(nxlt, nylt, 7);
+	LD	BC,7
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-308
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-272
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;   83		setp(nxl, nyl, 7);
+	LD	BC,7
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-320
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-260
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;   84	    /* Initialize the 8bpp graphics */
+;   85	    gfx_Begin();
+	CALL	_gfx_Begin
+;   86		timer_Control = TIMER1_DISABLE;
+	LD	BC,0
+;   87		timer_1_ReloadValue = timer_1_Counter = ONE_SECOND;
+;   88	    /* Set up the palette */
+;   89	    gfx_SetPalette(tiles_gfx_pal, sizeof_tiles_gfx_pal, 0);
+	LD	DE,0
+	PUSH	DE
+	LD	(15859760),BC
+	XOR	A,A
+	LD	BC,14
+	PUSH	BC
+	LD	(15859763),A
+	LD	BC,32768
+	LD	DE,_tiles_gfx_pal
+	PUSH	DE
+	LD	(15859712),BC
+	XOR	A,A
+	LD	(15859715),A
+	LD	BC,(15859712)
+	LD	A,(15859715)
+	LD	(15859716),BC
+	LD	(15859719),A
+	CALL	_gfx_SetPalette
+	POP	BC
+	POP	BC
+	POP	BC
+;   90	    gfx_SetColor(0x04);
+	LD	BC,4
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+;   91		gfx_SetTransparentColor(0x00);
+	LD	BC,0
+	PUSH	BC
+	CALL	_gfx_SetTransparentColor
+	POP	BC
+;   92	    /* Draw to buffer to avoid tearing */
+;   93	    gfx_SetDrawBuffer();
+	LD	BC,1
+	PUSH	BC
+	CALL	_gfx_SetDraw
+	POP	BC
+;   94	
+;   95	    /* Set monospace font with width of 8 */
+;   96	    gfx_SetMonospaceFont(8);
+	LD	BC,8
+	PUSH	BC
+	CALL	_gfx_SetMonospaceFont
+	POP	BC
+;   97		timer_Control = TIMER1_ENABLE | TIMER1_32K | TIMER1_0INT | TIMER1_DOWN;
+	LD	BC,7
+	LD	(15859760),BC
+	XOR	A,A
+	LD	(15859763),A
+;   98	    /* Wait for the enter key to quit */
+;   99	    while ((key = os_GetCSC()) != sk_Yequ && alive == 1) {
+	JR	L_166
+L_167:
+;  100			if (timer_IntStatus & TIMER1_RELOADED)
+	LD	A,(15859764)
+	AND	A,4
+	LD	C,A
+	LD	B,0
+	LD	HL,BC
+	CALL	__scmpzero
+	JR	Z,L_14
+;  101			{
+;  102				if (gfx_GetTile(&tilemap, x, y + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1] + 16) != 0x01&& gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2] + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3] + 16) != 0x01 && y + 16 != 224 && ylist[1] + y + 16 != 224 && ylist[2] + y + 16 != 224 && ylist[3] + y + 16 != 224)
+	LD	IY,(IX+-48)
+	LEA	IY,IY+16
+	LD	(IX+-89),IY
+	LD	BC,IY
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_11
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LD	(IX+-128),BC
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_11
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-12),BC
+	LD	BC,(IY+-12)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_11
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-18),BC
+	LD	BC,(IY+-18)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_11
+	LD	BC,224
+	LD	HL,(IX+-89)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_11
+	LD	HL,(IX+-128)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_11
+	LEA	IY,IX+-128
+	LD	HL,(IY+-12)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_11
+	LEA	IY,IX+-128
+	LD	HL,(IY+-18)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_11
+;  103				{
+;  104					y += 16;
+	LD	BC,(IX+-89)
+	LD	(IX+-48),BC
+;  105				}
+;  106				else
+	JR	L_12
+L_11:
+;  107				{
+;  108					key = 0x3A;
+	LD	(IX+-62),58
+;  109				}
+L_12:
+;  110				timer_IntAcknowledge = TIMER1_RELOADED;
+	LD	HL,15859764
+	LD	(HL),4
+	INC	HL
+	LD	(HL),0
+;  111			}
+L_14:
+;  112	        /* Draw tilemap and coords */
+;  113	        gfx_Tilemap(&tilemap, 0, 0);
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_Tilemap
+	POP	BC
+	POP	BC
+	POP	BC
+;  114			gfx_FillRectangle(0, 224, 320, 16);
+	LD	BC,16
+	PUSH	BC
+	LD	BC,320
+	PUSH	BC
+	LD	BC,224
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  115			gfx_SetTextXY(0, 224);
+	LD	BC,224
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;  116			gfx_PrintInt(score, 6);
+	LD	BC,6
+	PUSH	BC
+	LD	BC,(IX+-57)
+	PUSH	BC
+	CALL	_gfx_PrintInt
+	POP	BC
+	POP	BC
+;  117			gfx_SetTextXY(0, 0);
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;  118			/*gfx_FillRectangle(x, y, 16, 16);
+;  119			gfx_FillRectangle(x + xlist[1], y + ylist[1], 16, 16);
+;  120			gfx_FillRectangle(x + xlist[2], y + ylist[2], 16, 16);
+;  121			gfx_FillRectangle(x + xlist[3], y + ylist[3], 16, 16);
+;  122			gfx_FillRectangle(16, 16, 16, 16);
+;  123			gfx_FillRectangle(16 + nxl[1], 16 + nyl[1], 16, 16);
+;  124			gfx_FillRectangle(16 + nxl[2], 16 + nyl[2], 16, 16);
+;  125			gfx_FillRectangle(16 + nxl[3], 16 + nyl[3], 16, 16);*/
+;  126			piecedraw(xlist, ylist, x, y);
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-24
+	PEA	IX+-12
+	CALL	_piecedraw
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  127			piecedraw(nxl, nyl, 16, 16);
+	LD	BC,16
+	PUSH	BC
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-320
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-260
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_piecedraw
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  128			piecedraw(nxlt, nylt, 272, 16);
+	LD	BC,16
+	PUSH	BC
+	LD	BC,272
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-308
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-272
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_piecedraw
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  129			piecedraw(nxll, nyll, 272, 96);
+	LD	BC,96
+	PUSH	BC
+	LD	BC,272
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-296
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-248
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_piecedraw
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  130			if (hx[0] != 8)
+	LD	DE,8
+	LD	BC,-284
+	CALL	__ildix
+	OR	A,A
+	SBC	HL,DE
+	JR	Z,L_164
+;  131			{
+;  132				/*gfx_FillRectangle(16, 96, 16, 16);
+;  133				gfx_FillRectangle(16 + hx[1], 96 + hy[1], 16, 16);
+;  134				gfx_FillRectangle(16 + hx[2], 96 + hy[2], 16, 16);
+;  135				gfx_FillRectangle(16 + hx[3], 96 + hy[3], 16, 16);*/
+;  136				piecedraw(hx, hy, 16, 96);
+	LD	BC,96
+	PUSH	BC
+	LD	BC,16
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-332
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-284
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_piecedraw
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  137			}
+L_164:
+;  138			//gfx_TransparentSprite(one, x, y);
+;  139	
+;  140	        /* Do something based on the keypress */
+;  141	        switch (key) {
+	LD	A,(IX+-62)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+L__14:
+	LD	DE,26
+	OR	A,A
+	SBC	HL,DE
+	JR	C,L__15
+	LD	HL,28
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L__17
+	LD	HL,BC
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	DE,L__12-78
+	ADD	HL,DE
+	LD	HL,(HL)
+	JP	(HL)
+L__12:
+	DW24	L_16	
+
+	DW24	L_165	
+
+	DW24	L_51	
+
+L__15:
+	LD	DE,9
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	Z,L_83
+	LD	HL,9
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L__20
+	LD	DE,1
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	C,L_165
+	LD	HL,4
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_165
+	LD	HL,BC
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	DE,L__10-3
+	ADD	HL,DE
+	LD	HL,(HL)
+	JP	(HL)
+L__10:
+	DW24	L_17	
+
+	DW24	L_30	
+
+	DW24	L_41	
+
+	DW24	L_53	
+
+L__20:
+	LD	DE,19
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	C,L_165
+	LD	HL,20
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_165
+	LD	HL,BC
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	DE,L__11-57
+	ADD	HL,DE
+	LD	HL,(HL)
+	JP	(HL)
+L__11:
+	DW24	L_40	
+
+	DW24	L_64	
+
+L__17:
+	LD	DE,42
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	Z,L_159
+	LD	HL,42
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L__27
+	LD	DE,35
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	C,L_165
+	LD	HL,36
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_165
+	LD	HL,BC
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	DE,L__13-105
+	ADD	HL,DE
+	LD	HL,(HL)
+	JP	(HL)
+L__13:
+	DW24	L_29	
+
+	DW24	L_52	
+
+L__27:
+	LD	DE,58
+	LD	HL,BC
+	OR	A,A
+	SBC	HL,DE
+	JR	Z,L_86
+	JR	L_165
+;  142			case sk_2:
+L_16:
+;  143			case sk_Down:
+L_17:
+;  144				if (gfx_GetTile(&tilemap, x, y + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1] + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2] + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3] + 16) != 0x01 && y + 16 != 224 && ylist[1] + y + 16 != 224 && ylist[2] + y + 16 != 224 && ylist[3] + y + 16 != 224)
+	LD	IY,(IX+-48)
+	LEA	IY,IY+16
+	LD	(IX+-92),IY
+	LD	BC,IY
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-39),BC
+	LD	BC,(IY+-39)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-51),BC
+	LD	BC,(IY+-51)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-54),BC
+	LD	BC,(IY+-54)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_27
+	LD	BC,224
+	LD	HL,(IX+-92)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	IY,IX+-128
+	LD	HL,(IY+-39)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	IY,IX+-128
+	LD	HL,(IY+-51)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_27
+	LEA	IY,IX+-128
+	LD	HL,(IY+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_27
+;  145				{
+;  146					y += 16;
+	LD	BC,(IX+-92)
+	LD	(IX+-48),BC
+;  147					score++;
+	LD	BC,(IX+-57)
+	INC	BC
+	LD	(IX+-57),BC
+;  148				}
+;  149				else
+	JR	L_165
+L_27:
+;  150				{
+;  151					key = 0x3A;
+	LD	(IX+-62),58
+;  152				}
+;  153				break;
+	JR	L_165
+;  154				case sk_4:
+L_29:
+;  155	            case sk_Left:
+L_30:
+;  156					if (gfx_GetTile(&tilemap, x - 16, y) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1] - 16, y + ylist[1]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[2] - 16, y + ylist[2]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3] - 16, y + ylist[3]) != 0x01 && gfx_GetTile(&tilemap, x - 16, y) != 0x02 && gfx_GetTile(&tilemap, x + xlist[1] - 16, y + ylist[1]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[2] - 16, y + ylist[2]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[3] - 16, y + ylist[3]) != 0x02)
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	IY,(IX+-27)
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-60),HL
+	LEA	BC,IX+-9
+	LD	(IY+-57),BC
+	LD	BC,(IY+-60)
+	PUSH	BC
+	LD	HL,(IY+-57)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-72),HL
+	LEA	BC,IX+-6
+	LD	(IY+-63),BC
+	LD	BC,(IY+-72)
+	PUSH	BC
+	LD	HL,(IY+-63)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-78),HL
+	LEA	BC,IX+-3
+	LD	(IY+-75),BC
+	LD	BC,(IY+-78)
+	PUSH	BC
+	LD	HL,(IY+-75)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	IY,(IX+-27)
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-60)
+	PUSH	BC
+	LD	HL,(IY+-57)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-72)
+	PUSH	BC
+	LD	HL,(IY+-63)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-78)
+	PUSH	BC
+	LD	HL,(IY+-75)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+-16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+;  157					{
+;  158						x -= 16;
+	LD	IY,(IX+-27)
+	LEA	IY,IY+-16
+	LD	(IX+-27),IY
+;  159					}
+;  160	                break;
+	JR	L_165
+;  161				case sk_6:
+L_40:
+;  162	            case sk_Right:
+L_41:
+;  163					if (gfx_GetTile(&tilemap, x + 16, y) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1] + 16, y + ylist[1]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[2] + 16, y + ylist[2]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3] + 16, y + ylist[3]) != 0x01 && gfx_GetTile(&tilemap, x + 16, y) != 0x02 && gfx_GetTile(&tilemap, x + xlist[1] + 16, y + ylist[1]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[2] + 16, y + ylist[2]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[3] + 16, y + ylist[3]) != 0x02)
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	IY,(IX+-27)
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-84),HL
+	LEA	BC,IX+-9
+	LD	(IY+-81),BC
+	LD	BC,(IY+-84)
+	PUSH	BC
+	LD	HL,(IY+-81)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-90),HL
+	LEA	BC,IX+-6
+	LD	(IY+-87),BC
+	LD	BC,(IY+-90)
+	PUSH	BC
+	LD	HL,(IY+-87)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-96),HL
+	LEA	BC,IX+-3
+	LD	(IY+-93),BC
+	LD	BC,(IY+-96)
+	PUSH	BC
+	LD	HL,(IY+-93)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_165
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	IY,(IX+-27)
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-84)
+	PUSH	BC
+	LD	HL,(IY+-81)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-90)
+	PUSH	BC
+	LD	HL,(IY+-87)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+	LEA	IY,IX+-128
+	LD	BC,(IY+-96)
+	PUSH	BC
+	LD	HL,(IY+-93)
+	LD	BC,(IX+-27)
+	LD	HL,(HL)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_165
+;  164					{
+;  165						x += TILE_WIDTH;
+	LD	IY,(IX+-27)
+	LEA	IY,IY+16
+	LD	(IX+-27),IY
+;  166					}
+;  167	                break;
+	JR	L_165
+;  168				case sk_8:
+L_51:
+;  169				case sk_7:
+L_52:
+;  170	            case sk_Up:
+L_53:
+;  171					temp = ylist[1];
+	LEA	IY,IX+-24
+	LEA	BC,IY+3
+	LD	(IX+-125),BC
+	LEA	HL,IX+-21
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  172					ylist[1] = -1*xlist[1];
+	LEA	BC,IX+-9
+	LD	(IX+-116),BC
+	LEA	HL,IX+-9
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-371	; spill
+	CALL	__istix
+	LEA	HL,IY+3	; unspill
+	LD	BC,-392	; spill
+	CALL	__istix
+	POP	HL
+	LD	BC,-371	; unspill
+	PUSH	HL
+	CALL	__ildix
+	POP	HL
+	POP	BC
+	LD	HL,(HL)
+	CALL	__ineg
+;  173					xlist[1] = temp;
+	PUSH	BC
+	LD	BC,-380	; spill
+	CALL	__istix
+	POP	BC
+	LEA	HL,IX+-9
+	PUSH	BC
+	LD	BC,-395	; spill
+	CALL	__istix
+	LD	BC,-380	; unspill
+	CALL	__ildix
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-371	; spill
+	CALL	__istix
+	POP	HL
+	LD	BC,-392	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	(IY),HL
+	PUSH	BC
+	LD	BC,-371	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	BC,(IX+-51)
+;  174					temp = ylist[2];
+	LEA	DE,IY+6
+	LEA	IY,IX+-128
+	PUSH	BC
+	LD	BC,-395	; unspill
+	CALL	__ildix
+	POP	BC
+	LD	(HL),BC
+	LD	(IY+-105),DE
+	LEA	HL,IX+-18
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  175					ylist[2] = -1*xlist[2];
+	LEA	BC,IX+-6
+	LD	(IX+-113),BC
+	LEA	HL,IX+-6
+	LEA	IY,IX+-24
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-371	; spill
+	CALL	__istix
+	LEA	HL,IY+6	; unspill
+	LD	BC,-398	; spill
+	CALL	__istix
+	POP	HL
+	LD	BC,-371	; unspill
+	PUSH	HL
+	CALL	__ildix
+	POP	HL
+	POP	BC
+	LD	HL,(HL)
+	CALL	__ineg
+;  176					xlist[2] = temp;
+	PUSH	BC
+	LD	BC,-380	; spill
+	CALL	__istix
+	POP	BC
+	LEA	HL,IX+-6
+	PUSH	BC
+	LD	BC,-401	; spill
+	CALL	__istix
+	LD	BC,-380	; unspill
+	CALL	__ildix
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-371	; spill
+	CALL	__istix
+	POP	HL
+	LD	BC,-398	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	(IY),HL
+	PUSH	BC
+	LD	BC,-371	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	BC,(IX+-51)
+;  177					temp = ylist[3];
+	LEA	DE,IY+9
+	LEA	IY,IX+-128
+	PUSH	BC
+	LD	BC,-401	; unspill
+	CALL	__ildix
+	POP	BC
+	LD	(HL),BC
+	LD	(IY+-99),DE
+	LEA	HL,IX+-15
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  178					ylist[3] = -1*xlist[3];
+	LEA	BC,IX+-3
+	LD	(IX+-110),BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LEA	IY,IX+-24
+	CALL	__ineg
+	LD	(IY+9),HL
+;  179					xlist[3] = temp;
+	LEA	HL,IX+-3
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  180	
+;  181					if (gfx_GetTile(&tilemap, x, y) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3]) != 0x01 && gfx_GetTile(&tilemap, x, y) != 0x02 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3]) != 0x02)
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-21
+	LD	(IX+-125),BC
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LEA	IY,IX+-128
+	LD	(IY+-3),HL
+	LEA	BC,IX+-9
+	LD	(IX+-116),BC
+	LD	BC,(IY+-3)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-18
+	LEA	IY,IX+-128
+	LD	(IY+-105),BC
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	(IY+-6),HL
+	LEA	BC,IX+-6
+	LD	(IX+-113),BC
+	LD	BC,(IY+-6)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-15
+	LEA	IY,IX+-128
+	LD	(IY+-99),BC
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	(IY+-9),HL
+	LEA	BC,IX+-3
+	LD	(IX+-110),BC
+	LD	BC,(IY+-9)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_62
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-9
+	LD	(IX+-116),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-3)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-6
+	LD	(IX+-113),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-6)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_62
+	LEA	BC,IX+-3
+	LD	(IX+-110),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-9)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	NZ,L_165
+;  182					{
+;  183	
+;  184					}
+;  185					else
+L_62:
+;  186					{
+;  187						temp = xlist[1];
+	LD	HL,(IX+-116)
+	LD	BC,-350
+	CALL	__istix
+	LD	BC,-350
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  188						xlist[1] = -1 * ylist[1];
+	LD	HL,(IX+-125)
+	LD	BC,-347
+	CALL	__istix
+	LD	BC,-347
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-350
+	CALL	__ildix
+	LD	(HL),DE
+;  189						ylist[1] = temp;
+	LD	BC,-347
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  190						temp = xlist[2];
+	LD	HL,(IX+-113)
+	LD	BC,-344
+	CALL	__istix
+	LD	BC,-344
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  191						xlist[2] = -1 * ylist[2];
+	LEA	IY,IX+-128
+	LD	HL,(IY+-105)
+	LD	BC,-341
+	CALL	__istix
+	LD	BC,-341
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-344
+	CALL	__ildix
+	LD	(HL),DE
+;  192						ylist[2] = temp;
+	LD	BC,-341
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  193						temp = xlist[3];
+	LD	HL,(IX+-110)
+	LD	BC,-338
+	CALL	__istix
+	LD	BC,-338
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  194						xlist[3] = -1 * ylist[3];
+	LD	HL,(IY+-99)
+	LD	BC,-335
+	CALL	__istix
+	LD	BC,-335
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-338
+	CALL	__ildix
+	LD	(HL),DE
+;  195						ylist[3] = temp;
+	LD	BC,-335
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  196					}
+;  197	                break;
+	JR	L_165
+;  198				case sk_9:
+L_64:
+;  199					temp = xlist[1];
+	LEA	IY,IX+-12
+	LEA	BC,IY+3
+	LD	(IX+-107),BC
+	LEA	HL,IY+3
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  200					xlist[1] = -1 * ylist[1];
+	LEA	BC,IX+-21
+	LEA	IY,IX+-128
+	LD	(IY+-27),BC
+	LEA	HL,IX+-21
+	LEA	IY,IX+-9
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-377	; spill
+	CALL	__istix
+	POP	HL
+	POP	BC
+	LD	HL,(HL)
+	CALL	__ineg
+;  201					ylist[1] = temp;
+	PUSH	BC
+	LD	BC,-380	; spill
+	CALL	__istix
+	POP	BC
+	LEA	HL,IX+-21
+	PUSH	BC
+	LD	BC,-383	; spill
+	CALL	__istix
+	LD	BC,-380	; unspill
+	CALL	__ildix
+	LD	BC,-377	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	(IY),HL
+	LD	BC,(IX+-51)
+;  202					temp = xlist[2];
+	LEA	IY,IX+-12
+	LEA	DE,IY+6
+	PUSH	BC
+	LD	BC,-383	; unspill
+	CALL	__ildix
+	POP	BC
+	LD	(HL),BC
+	LD	(IX+-104),DE
+	LEA	HL,IY+6
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  203					xlist[2] = -1 * ylist[2];
+	LEA	BC,IX+-18
+	LEA	IY,IX+-128
+	LD	(IY+-21),BC
+	LEA	HL,IX+-18
+	LEA	IY,IX+-6
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-386	; spill
+	CALL	__istix
+	POP	HL
+	POP	BC
+	LD	HL,(HL)
+	CALL	__ineg
+;  204					ylist[2] = temp;
+	PUSH	BC
+	LD	BC,-380	; spill
+	CALL	__istix
+	POP	BC
+	LEA	HL,IX+-18
+	PUSH	BC
+	LD	BC,-389	; spill
+	CALL	__istix
+	LD	BC,-380	; unspill
+	CALL	__ildix
+	LD	BC,-386	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	(IY),HL
+	LD	BC,(IX+-51)
+;  205					temp = xlist[3];
+	LEA	IY,IX+-12
+	LEA	DE,IY+9
+	PUSH	BC
+	LD	BC,-389	; unspill
+	CALL	__ildix
+	POP	BC
+	LD	(HL),BC
+	LD	(IX+-122),DE
+	LEA	HL,IY+9
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  206					xlist[3] = -1 * ylist[3];
+	LEA	BC,IX+-15
+	LEA	IY,IX+-128
+	LD	(IY+-15),BC
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LEA	IY,IX+-12
+	CALL	__ineg
+	LD	(IY+9),HL
+;  207					ylist[3] = temp;
+	LEA	HL,IX+-15
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  208					
+;  209	
+;  210					if (gfx_GetTile(&tilemap, x, y) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2]) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3]) != 0x01 && gfx_GetTile(&tilemap, x, y) != 0x02 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2]) != 0x02 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3]) != 0x02)
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-21
+	LEA	IY,IX+-128
+	LD	(IY+-27),BC
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	(IY+-30),HL
+	LEA	BC,IX+-9
+	LD	(IX+-107),BC
+	LD	BC,(IY+-30)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-18
+	LEA	IY,IX+-128
+	LD	(IY+-21),BC
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	(IY+-33),HL
+	LEA	BC,IX+-6
+	LD	(IX+-104),BC
+	LD	BC,(IY+-33)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-15
+	LEA	IY,IX+-128
+	LD	(IY+-15),BC
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	(IY+-36),HL
+	LEA	BC,IX+-3
+	LD	(IX+-122),BC
+	LD	BC,(IY+-36)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_73
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-9
+	LD	(IX+-107),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-30)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-6
+	LD	(IX+-104),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-33)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	Z,L_73
+	LEA	BC,IX+-3
+	LD	(IX+-122),BC
+	LEA	IY,IX+-128
+	LD	BC,(IY+-36)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,2
+	SBC	HL,BC
+	JR	NZ,L_165
+;  211					{
+;  212	
+;  213					}
+;  214					else
+L_73:
+;  215					{
+;  216						temp = ylist[1];
+	LEA	IY,IX+-128
+	LD	HL,(IY+-27)
+	LD	BC,-368
+	CALL	__istix
+	LD	BC,-368
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  217						ylist[1] = -1 * xlist[1];
+	LD	HL,(IX+-107)
+	LD	BC,-365
+	CALL	__istix
+	LD	BC,-365
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-368
+	CALL	__ildix
+	LD	(HL),DE
+;  218						xlist[1] = temp;
+	LD	BC,-365
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  219						temp = ylist[2];
+	LD	HL,(IY+-21)
+	LD	BC,-362
+	CALL	__istix
+	LD	BC,-362
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  220						ylist[2] = -1 * xlist[2];
+	LD	HL,(IX+-104)
+	LD	BC,-359
+	CALL	__istix
+	LD	BC,-359
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-362
+	CALL	__ildix
+	LD	(HL),DE
+;  221						xlist[2] = temp;
+	LD	BC,-359
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  222						temp = ylist[3];
+	LD	HL,(IY+-15)
+	LD	BC,-356
+	CALL	__istix
+	LD	BC,-356
+	CALL	__ildix
+	LD	BC,(HL)
+	LD	(IX+-51),BC
+;  223						ylist[3] = -1 * xlist[3];
+	LD	HL,(IX+-122)
+	LD	BC,-353
+	CALL	__istix
+	LD	BC,-353
+	CALL	__ildix
+	LD	HL,(HL)
+	CALL	__ineg
+	LD	DE,HL
+	LD	BC,-356
+	CALL	__ildix
+	LD	(HL),DE
+;  224						xlist[3] = temp;
+	LD	BC,-353
+	CALL	__ildix
+	LD	BC,(IX+-51)
+	LD	(HL),BC
+;  225					}
+;  226					break;
+	JR	L_165
+;  227				case sk_Enter:
+;  228					while (gfx_GetTile(&tilemap, x, y + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[1], y + ylist[1] + 16) != 0x01&& gfx_GetTile(&tilemap, x + xlist[2], y + ylist[2] + 16) != 0x01 && gfx_GetTile(&tilemap, x + xlist[3], y + ylist[3] + 16) != 0x01 && y + 16 != 224 && ylist[1] + y + 16 != 224 && ylist[2] + y + 16 != 224 && ylist[3] + y + 16 != 224)
+L_84:
+;  229					{
+;  230						y += 16;
+	LD	BC,(IX+-95)
+	LD	(IX+-48),BC
+;  231						score += 2;
+	LD	IY,(IX+-57)
+	LEA	IY,IY+2
+	LD	(IX+-57),IY
+;  232					}
+L_83:
+	LD	IY,(IX+-48)
+	LEA	IY,IY+16
+	LD	(IX+-95),IY
+	LD	BC,IY
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-42),BC
+	LD	BC,(IY+-42)
+	PUSH	BC
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	HL,IX+-18
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-45),BC
+	LD	BC,(IY+-45)
+	PUSH	BC
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	HL,IX+-15
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	LD	IY,HL
+	LEA	BC,IY+16
+	LEA	IY,IX+-128
+	LD	(IY+-48),BC
+	LD	BC,(IY+-48)
+	PUSH	BC
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	Z,L_85
+	LD	BC,224
+	LD	HL,(IX+-95)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	IY,IX+-128
+	LD	HL,(IY+-42)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	IY,IX+-128
+	LD	HL,(IY+-45)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_85
+	LEA	IY,IX+-128
+	LD	HL,(IY+-48)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_84
+L_85:
+;  233					key = 0x3A;
+	LD	(IX+-62),58
+;  234				case 0x3A:
+L_86:
+;  235					/*setting the block in place*/
+;  236					gfx_SetTile(&tilemap, x, y, 0x01);
+	LD	BC,(IX+-48)
+	PUSH	BC
+	LD	BC,(IX+-27)
+	PUSH	BC
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	(HL),1
+;  237					gfx_SetTile(&tilemap, x + xlist[1], y + ylist[1], 0x01);
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	PUSH	HL
+	LEA	HL,IX+-9
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	(HL),1
+;  238					gfx_SetTile(&tilemap, x + xlist[2], y + ylist[2], 0x01);
+	LEA	BC,IX+-18
+	LD	(IX+-98),BC
+	LD	HL,BC
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	PUSH	HL
+	LEA	HL,IX+-6
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	(HL),1
+;  239					gfx_SetTile(&tilemap, x + xlist[3], y + ylist[3], 0x01);
+	LEA	BC,IX+-15
+	LD	(IX+-101),BC
+	LD	HL,BC
+	LD	HL,(HL)
+	LD	BC,(IX+-48)
+	ADD	HL,BC
+	PUSH	HL
+	LEA	HL,IX+-3
+	LD	HL,(HL)
+	LD	BC,(IX+-27)
+	ADD	HL,BC
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	(HL),1
+;  240					b1x = MAX(0, ylist[1]);
+	LEA	HL,IX+-21
+	LD	HL,(HL)
+	LD	BC,0
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__114
+	JP	PE,L_89
+	JR	L__115
+L__114:
+	JP	PO,L_89
+L__115:
+	LD	BC,0
+	LEA	IY,IX+-128
+	LD	(IY+-108),BC
+	JR	L_90
+L_89:
+	LEA	HL,IX+-21
+	LD	BC,(HL)
+	LEA	IY,IX+-128
+	LD	(IY+-108),BC
+L_90:
+	LEA	IY,IX+-128
+	LD	BC,(IY+-108)
+	LD	(IY+-66),BC
+;  241					b1y = MAX(ylist[2], ylist[3]);
+	LD	IY,(IX+-98)
+	LD	HL,(IX+-101)
+	LD	HL,(HL)
+	LD	BC,(IY)
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__116
+	JP	PE,L_93
+	JR	L__117
+L__116:
+	JP	PO,L_93
+L__117:
+	LD	HL,(IX+-98)
+	LD	BC,(HL)
+	LEA	IY,IX+-128
+	LD	(IY+-24),BC
+	JR	L_94
+L_93:
+	LD	HL,(IX+-101)
+	LD	BC,(HL)
+	LEA	IY,IX+-128
+	LD	(IY+-24),BC
+L_94:
+	LEA	IY,IX+-128
+	LD	BC,(IY+-24)
+	LD	(IY+-69),BC
+;  242					temp = MAX(b1x, b1y);
+	LD	BC,(IY+-66)
+	LD	HL,(IY+-69)
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__118
+	JP	PE,L_97
+	JR	L__119
+L__118:
+	JP	PO,L_97
+L__119:
+	LEA	IY,IX+-128
+	LD	BC,(IY+-66)
+	LD	(IY+-102),BC
+	JR	L_98
+L_97:
+	LEA	IY,IX+-128
+	LD	BC,(IY+-69)
+	LD	(IY+-102),BC
+L_98:
+	LEA	IY,IX+-128
+	LD	BC,(IY+-102)
+	LD	(IX+-51),BC
+;  243					curline = (y + temp) / 16;
+	LD	BC,(IX+-48)
+	LD	HL,(IX+-51)
+	ADD	HL,BC
+	LD	A,4
+	CALL	__ishru_b
+	LD	(IX+-54),HL
+;  244					current = 0x01;
+	LD	(IX+-61),1
+;  245					/*checks to see if you have cleared lines*/
+;  246					while (seconds < 4)
+	JR	L_115
+L_116:
+;  247					{
+;  248						/*for loop makes sure that all the tiles are solid*/
+;  249						for (er = 4; er < 15 && current == 0x01; er++)
+	LD	(IX+-60),BC
+	JR	L_104
+L_102:
+;  250						{
+;  251							current = gfx_GetTile(&tilemap, er*16, curline*16);
+	LD	HL,(IX+-54)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	HL,(IX+-60)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	LD	(IX+-61),A
+;  252								//stops the while loop if it finds a gap
+;  253								if (current != 0x01)
+	CP	A,1
+	JR	NZ,L_107
+	LD	BC,(IX+-60)
+	INC	BC
+	LD	(IX+-60),BC
+;  254								{
+;  255									break;
+;  256								}
+;  257								//gfx_PrintInt(er, 4);
+;  258								//dbg_sprintf(dbgout, "for loop er var: %d, current value: %u\n", er, current);
+;  259						}
+L_104:
+	LD	BC,15
+	LD	HL,(IX+-60)
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__120
+	JP	PE,L_107
+	JR	L__121
+L__120:
+	JP	PO,L_107
+L__121:
+	LD	A,(IX+-61)
+	CP	A,1
+	JR	Z,L_102
+L_107:
+;  260						
+;  261						//if the line was full than go to the next line
+;  262						if (er == 15)
+	LD	BC,15
+	LD	HL,(IX+-60)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_108
+;  263						{
+;  264							//gfx_PrintStringXY("test", 0, 0);
+;  265								linelist[hh] = curline;
+	LD	HL,(IX+-83)
+	LD	BC,(IX+-83)
+	LD	DE,(IX+-54)
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	BC,HL
+	LEA	HL,IX+-77
+	ADD	HL,BC
+	LD	(HL),DE
+;  266								hh++;
+	LD	BC,(IX+-83)
+	INC	BC
+	LD	(IX+-83),BC
+;  267						}
+L_108:
+;  268						//dbg_sprintf(dbgout, "er: %d current: %u curline: %d\n", er, current, curline);
+;  269						er = 5;
+	LD	BC,5
+	LD	(IX+-60),BC
+;  270						current = 0x01;
+	LD	(IX+-61),1
+;  271						if (curline > 0 && curline != 14)
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__122
+	JP	PE,L_112
+	JR	L__123
+L__122:
+	JP	PO,L_112
+L__123:
+	LD	BC,14
+	LD	HL,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_112
+;  272						{
+;  273							curline--;
+	LD	BC,(IX+-54)
+	DEC	BC
+	LD	(IX+-54),BC
+;  274						}
+;  275						else
+	JR	L_114
+L_112:
+;  276						{
+;  277							curline = 14;
+	LD	BC,14
+	LD	(IX+-54),BC
+;  278						}
+L_114:
+;  279						seconds++;
+	LD	BC,(IX+-80)
+	INC	BC
+	LD	(IX+-80),BC
+;  280					}
+L_115:
+	LD	BC,4
+	LD	HL,(IX+-80)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_116
+;  281					hh = 0;
+	LD	BC,0
+	LD	(IX+-83),BC
+;  282					//resetting variables
+;  283					current = 0x01;
+	LD	(IX+-61),1
+;  284					curline = linelist[0];
+	LD	BC,(IX+-77)
+	LD	(IX+-54),BC
+	OR	A,A
+;  285					//if lines need to be cleared do this
+;  286					if (curline > 0)
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__124
+	JP	PE,L_151
+	JR	L__125
+L__124:
+	JP	PO,L_151
+L__125:
+;  287					{
+;  288						//for loop runs through all the lines curline is the line being read from and linenow is the line being written to
+;  289						for (linenow = linelist[0]; linenow >= 0; linenow--)
+	LD	BC,(IX+-77)
+	LD	(IX+-86),BC
+	JR	L_140
+L_138:
+;  290						{
+;  291							if (curline > 0 && curline != 14)
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__126
+	JP	PE,L_128
+	JR	L__127
+L__126:
+	JP	PO,L_128
+L__127:
+	LD	BC,14
+	LD	HL,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_128
+;  292							{
+;  293								curline--;
+	LD	BC,(IX+-54)
+	DEC	BC
+	LD	(IX+-54),BC
+;  294							}
+;  295							while (curline > 0 && curline != 14 &&  (curline == linelist[0] || curline == linelist[1] || curline == linelist[2] || curline == linelist[3]))
+	JR	L_128
+L_129:
+;  296							{
+;  297								curline--;
+	LD	BC,(IX+-54)
+	DEC	BC
+	LD	(IX+-54),BC
+;  298							}
+L_128:
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__128
+	JP	PE,L_132
+	JR	L__129
+L__128:
+	JP	PO,L_132
+L__129:
+	LD	BC,14
+	LD	HL,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_132
+	LD	BC,(IX+-54)
+	LD	HL,(IX+-77)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_129
+	LEA	HL,IX+-74
+	LD	HL,(HL)
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_129
+	LEA	HL,IX+-71
+	LD	HL,(HL)
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_129
+	LEA	HL,IX+-68
+	LD	HL,(HL)
+	LD	BC,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_129
+L_132:
+;  299							if (curline == 0)
+	LD	BC,0
+	LD	HL,(IX+-54)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_137
+;  300							{
+;  301								curline = 14;
+	LD	BC,14
+	LD	(IX+-54),BC
+;  302							}
+L_137:
+;  303							//for loops runs through all the x values on the board
+;  304							for (curx = 4; curx < 15; curx++)
+	LD	BC,4
+	LD	(IX+-65),BC
+	JR	L_136
+L_134:
+;  305							{
+;  306								//sets the tile at (curx,linenow) to the value of (curx,curline)
+;  307								gfx_SetTile(&tilemap, curx*16, linenow*16, (gfx_GetTile(&tilemap, curx*16, curline*16)));
+	LD	HL,(IX+-54)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	HL,(IX+-65)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	DE,HL
+	LD	HL,(IX+-86)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	HL,(IX+-65)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	PEA	IX+-45
+	PUSH	BC
+	PUSH	HL
+	LD	HL,DE
+	LD	BC,-404
+	CALL	__istix
+	POP	HL
+	POP	BC
+	PUSH	IY
+	PUSH	BC
+	LD	IY,-405
+	LD	BC,IX
+	ADD	IY,BC
+	LD	(IY),D
+	POP	BC
+	POP	IY
+	CALL	_gfx_TilePtr
+	PUSH	BC
+	LD	BC,-404
+	PUSH	HL
+	CALL	__ildix
+	LD	DE,HL
+	POP	HL
+	POP	BC
+	PUSH	IY
+	PUSH	BC
+	LD	IY,-405
+	LD	BC,IX
+	ADD	IY,BC
+	LD	D,(IY)
+	POP	BC
+	POP	IY
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	IY,DE
+	LD	A,(IY)
+	LD	(HL),A
+	LD	BC,(IX+-65)
+	INC	BC
+	LD	(IX+-65),BC
+;  308							}
+L_136:
+	LD	BC,15
+	LD	HL,(IX+-65)
+	OR	A,A
+	SBC	HL,BC
+	JP	M,L__130
+	JP	PE,L_134
+	JR	L__131
+L__130:
+	JP	PO,L_134
+L__131:
+	LD	BC,(IX+-86)
+	DEC	BC
+	LD	(IX+-86),BC
+;  309							
+;  310							
+;  311						}
+L_140:
+	LD	BC,0
+	LD	HL,(IX+-86)
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__132
+	JP	PE,L_138
+	JR	L__133
+L__132:
+	JP	PO,L_138
+L__133:
+;  312						if (linelist[3] > 0)
+	LEA	HL,IX+-68
+	LD	BC,(HL)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__134
+	JP	PE,L_147
+	JR	L__135
+L__134:
+	JP	PO,L_147
+L__135:
+;  313						{
+;  314							score += 800;
+	LD	HL,(IX+-57)
+	LD	BC,800
+	ADD	HL,BC
+	LD	(IX+-57),HL
+;  315						}
+;  316						else if (linelist[2] > 0)
+	JR	L_149
+L_147:
+	LEA	HL,IX+-71
+	LD	BC,(HL)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__136
+	JP	PE,L_145
+	JR	L__137
+L__136:
+	JP	PO,L_145
+L__137:
+;  317						{
+;  318							score += 500;
+	LD	HL,(IX+-57)
+	LD	BC,500
+	ADD	HL,BC
+	LD	(IX+-57),HL
+;  319						}
+;  320						else if (linelist[1] > 0)
+	JR	L_149
+L_145:
+	LEA	HL,IX+-74
+	LD	BC,(HL)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__138
+	JP	PE,L_143
+	JR	L__139
+L__138:
+	JP	PO,L_143
+L__139:
+;  321						{
+;  322							score += 300;
+	LD	HL,(IX+-57)
+	LD	BC,300
+	ADD	HL,BC
+	LD	(IX+-57),HL
+;  323						}
+;  324						else if (linelist[0] > 0)
+	JR	L_149
+L_143:
+	LD	BC,(IX+-77)
+	OR	A,A
+	SBC	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__140
+	JP	PE,L_149
+	JR	L__141
+L__140:
+	JP	PO,L_149
+L__141:
+;  325						{
+;  326							score += 100;
+	LD	IY,(IX+-57)
+	LEA	IY,IY+100
+	LD	(IX+-57),IY
+;  327						}
+L_149:
+;  328						linelist[0] = 0;
+	LD	BC,0
+	LD	(IX+-77),BC
+;  329						linelist[1] = 0;
+	LEA	IY,IX+-77
+	LEA	HL,IY+3
+;  330						linelist[2] = 0;
+	PUSH	BC
+	PUSH	HL
+	LEA	HL,IY+6
+	LD	BC,-374	; spill
+	CALL	__istix
+	POP	HL
+	POP	BC
+	LD	BC,0
+	LD	(HL),BC
+	PUSH	BC
+	PUSH	HL
+	LD	HL,IY
+	LD	BC,-371	; spill
+	CALL	__istix
+	POP	HL
+	LD	BC,-374	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+	LD	(IY),BC
+	PUSH	BC
+	LD	BC,-371	; unspill
+	PUSH	HL
+	CALL	__ildix
+	LD	IY,HL
+	POP	HL
+	POP	BC
+;  331						linelist[3] = 0;
+	LEA	HL,IY+9
+	LD	BC,0
+	LD	(HL),BC
+;  332						seconds = 0;
+;  333						curline = 13;
+;  334						er = 5;
+;  335					}
+L_151:
+;  336					x = 160;
+	LD	BC,160
+	LD	(IX+-27),BC
+;  337					y = 0;
+	LD	BC,0
+	LD	(IX+-48),BC
+;  338					setp(xlist, ylist, nxl[0]);
+	LD	BC,-260
+	CALL	__ildix
+	PUSH	HL
+	PEA	IX+-24
+	PEA	IX+-12
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  339					setp(nxl, nyl, nxlt[0]);
+	LD	BC,-272
+	CALL	__ildix
+	PUSH	HL
+	LD	HL,IX
+	LD	BC,-320
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-260
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  340					setp(nxlt, nylt, nxll[0]);
+	LEA	IY,IX+-128
+	LD	BC,(IY+-120)
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-308
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-272
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  341					setp(nxll, nyll, 7);
+	LD	BC,7
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-296
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-248
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  342					seconds = 0;
+	LD	BC,0
+	LD	(IX+-80),BC
+;  343					for (er = 4; er < 15 && alive == 1; er++)
+	LD	BC,4
+	LD	(IX+-60),BC
+	JR	L_157
+L_155:
+;  344					{
+;  345						current = gfx_GetTile(&tilemap, er * 16, 0);
+	LD	BC,0
+	PUSH	BC
+	LD	HL,(IX+-60)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	PEA	IX+-45
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	LD	(IX+-61),A
+;  346						//stops the while loop if it finds a gap
+;  347						if (current == 0x01)
+	CP	A,1
+	JR	NZ,L_156
+;  348						{
+;  349							alive = 0;
+	LD	BC,0
+	LD	(IX+-119),BC
+;  350						}
+;  351						//gfx_PrintInt(er, 4);
+;  352						//dbg_sprintf(dbgout, "for loop er var: %d, current value: %u\n", er, current);
+;  353					}
+L_156:
+	LD	BC,(IX+-60)
+	INC	BC
+	LD	(IX+-60),BC
+L_157:
+	LD	BC,15
+	LD	HL,(IX+-60)
+	OR	A,A
+	SBC	HL,BC
+	JP	P,L__142
+	JP	PE,L_165
+	JR	L__143
+L__142:
+	JP	PO,L_165
+L__143:
+	LD	BC,1
+	LD	HL,(IX+-119)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_155
+;  354					break;
+	JR	L_165
+;  355					case sk_Store:
+L_159:
+;  356						temp = hx[0];
+	LD	BC,-284
+	CALL	__ildix
+	LD	(IX+-51),HL
+;  357						setp(hx, hy, xlist[0]);
+	LD	BC,(IX+-12)
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-332
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-284
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  358						if (temp != 8)
+	LD	HL,(IX+-51)
+	LD	BC,8
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_161
+;  359						{
+;  360							setp(xlist, ylist, temp);
+	LD	BC,(IX+-51)
+	PUSH	BC
+	PEA	IX+-24
+	PEA	IX+-12
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  361						}
+;  362						else
+	JR	L_162
+L_161:
+;  363						{
+;  364							setp(xlist, ylist, nxl[0]);
+	LD	BC,-260
+	CALL	__ildix
+	PUSH	HL
+	PEA	IX+-24
+	PEA	IX+-12
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  365							setp(nxl, nyl, nxlt[0]);
+	LD	BC,-272
+	CALL	__ildix
+	PUSH	HL
+	LD	HL,IX
+	LD	BC,-320
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-260
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  366							setp(nxlt, nylt, nxll[0]);
+	LEA	IY,IX+-128
+	LD	BC,(IY+-120)
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-308
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-272
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  367							setp(nxll, nyll, 7);
+	LD	BC,7
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-296
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	LD	HL,IX
+	LD	BC,-248
+	ADD	HL,BC
+	LD	BC,HL
+	PUSH	BC
+	CALL	_setp
+	POP	BC
+	POP	BC
+	POP	BC
+;  368						}
+L_162:
+;  369						x = 160;
+	LD	BC,160
+	LD	(IX+-27),BC
+;  370						y = 0;
+	LD	BC,0
+	LD	(IX+-48),BC
+;  371						break;
+;  372	            default:
+;  373	                break;
+;  374	        }
+L_165:
+;  375	        gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;  376	    }
+L_166:
+	CALL	_os_GetCSC
+	LD	(IX+-62),A
+	CP	A,53
+	JR	Z,L_168
+	LD	BC,1
+	LD	HL,(IX+-119)
+	OR	A,A
+	SBC	HL,BC
+	JR	Z,L_167
+L_168:
+;  377		gfx_FillScreen(0x02);
+	LD	BC,2
+	PUSH	BC
+	CALL	_gfx_FillScreen
+	POP	BC
+;  378		gfx_PrintStringXY("game over. score:", 76, 112);
+	LD	BC,112
+	PUSH	BC
+	LD	BC,76
+	PUSH	BC
+	LD	BC,L__111
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;  379		gfx_PrintUInt(score, 6);
+	LD	BC,6
+	PUSH	BC
+	LD	BC,(IX+-57)
+	PUSH	BC
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;  380		gfx_PrintStringXY("press enter to exit", 152, 128);
+	LD	BC,128
+	PUSH	BC
+	LD	BC,152
+	PUSH	BC
+	LD	BC,L__112
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;  381		gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;  382		while ((key = os_GetCSC()) != sk_Enter)
+L_170:
+	CALL	_os_GetCSC
+	LD	(IX+-62),A
+	CP	A,9
+	JR	NZ,L_170
+;  383		{
+;  384		}
+;  385	    /* Close the graphics and return to the OS */
+;  386	    gfx_End();
+	CALL	_gfx_End
+;  387	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_End                            IMPORT  -----   function
+;_gfx_PrintUInt                      IMPORT  -----   function
+;_gfx_PrintStringXY                  IMPORT  -----   function
+;_gfx_FillScreen                     IMPORT  -----   function
+;_os_GetCSC                          IMPORT  -----   function
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_piecedraw                          IMPORT  -----   function
+;_gfx_PrintInt                       IMPORT  -----   function
+;_gfx_SetTextXY                      IMPORT  -----   function
+;_gfx_FillRectangle                  IMPORT  -----   function
+;_gfx_Tilemap                        IMPORT  -----   function
+;_gfx_TilePtr                        IMPORT  -----   function
+;_gfx_SetMonospaceFont               IMPORT  -----   function
+;_gfx_SetDraw                        IMPORT  -----   function
+;_gfx_SetTransparentColor            IMPORT  -----   function
+;_gfx_SetColor                       IMPORT  -----   function
+;_tiles_gfx_pal                      IMPORT     14   variable
+;_gfx_SetPalette                     IMPORT  -----   function
+;_gfx_Begin                          IMPORT  -----   function
+;_setp                               IMPORT  -----   function
+;_srand                              IMPORT  -----   function
+;_set_tiles_data                     IMPORT     18   variable
+;_tilemap_map                        IMPORT  unknown variable
+;_1temp1                             STATIC     12   variable
+;_0temp0                             STATIC     12   variable
+;hy                                  IX-332     12   variable
+;nyl                                 IX-320     12   variable
+;nylt                                IX-308     12   variable
+;nyll                                IX-296     12   variable
+;hx                                  IX-284     12   variable
+;nxlt                                IX-272     12   variable
+;nxl                                 IX-260     12   variable
+;nxll                                IX-248     12   variable
+;temp87                              IX-236      3   variable
+;G_37                                IX-233      3   variable
+;temp95                              IX-230      3   variable
+;G_39                                IX-227      3   variable
+;G_20                                IX-224      3   variable
+;G_21                                IX-221      3   variable
+;G_18                                IX-218      3   variable
+;G_19                                IX-215      3   variable
+;G_16                                IX-212      3   variable
+;G_17                                IX-209      3   variable
+;G_14                                IX-206      3   variable
+;G_15                                IX-203      3   variable
+;G_12                                IX-200      3   variable
+;b1y                                 IX-197      3   variable
+;b1x                                 IX-194      3   variable
+;G_13                                IX-191      3   variable
+;G_10                                IX-188      3   variable
+;G_11                                IX-185      3   variable
+;G_8                                 IX-182      3   variable
+;G_7                                 IX-179      3   variable
+;G_62                                IX-176      3   variable
+;G_61                                IX-173      3   variable
+;G_60                                IX-170      3   variable
+;G_6                                 IX-167      3   variable
+;G_50                                IX-164      3   variable
+;G_48                                IX-161      3   variable
+;G_46                                IX-158      3   variable
+;G_52                                IX-155      3   variable
+;temp91                              IX-152      3   variable
+;G_54                                IX-149      3   variable
+;G_3                                 IX-146      3   variable
+;G_56                                IX-143      3   variable
+;G_2                                 IX-140      3   variable
+;G_32                                IX-137      3   variable
+;G_30                                IX-134      3   variable
+;G_28                                IX-131      3   variable
+;G_1                                 IX-128      3   variable
+;G_35                                IX-125      3   variable
+;G_57                                IX-122      3   variable
+;alive                               IX-119      3   variable
+;G_34                                IX-116      3   variable
+;G_36                                IX-113      3   variable
+;G_38                                IX-110      3   variable
+;G_53                                IX-107      3   variable
+;G_55                                IX-104      3   variable
+;G_64                                IX-101      3   variable
+;G_65                                 IX-98      3   variable
+;G_59                                 IX-95      3   variable
+;G_5                                  IX-92      3   variable
+;G_0                                  IX-89      3   variable
+;linenow                              IX-86      3   variable
+;hh                                   IX-83      3   variable
+;seconds                              IX-80      3   variable
+;linelist                             IX-77     12   variable
+;curx                                 IX-65      3   variable
+;key                                  IX-62      1   variable
+;current                              IX-61      1   variable
+;er                                   IX-60      3   variable
+;score                                IX-57      3   variable
+;curline                              IX-54      3   variable
+;temp                                 IX-51      3   variable
+;y                                    IX-48      3   variable
+;tilemap                              IX-45     18   variable
+;x                                    IX-27      3   variable
+;ylist                                IX-24     12   variable
+;xlist                                IX-12     12   variable
+
+
+; Stack Frame Size: 411 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__111:
+	DB	"game over. score:"
+	DB	0
+L__112:
+	DB	"press enter to exit"
+	DB	0
+	SEGMENT TEXT
+_0temp0:
+	DW	8
+	DB	0
+	DW	0
+	DB	0
+	DW	0
+	DB	0
+	DW	0
+	DB	0
+_1temp1:
+	DW	0
+	DB	0
+	DW	0
+	DB	0
+	DW	0
+	DB	0
+	DW	0
+	DB	0
+	SEGMENT CODE
+;  388	void setp(signed int *xar, signed int *yar, int num)
+;  389	{
+_setp:
+	CALL	__frameset0
+;  390		if (num == 7)
+	LD	BC,7
+	LD	HL,(IX+12)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_182
+;  391		{
+;  392			num = rand() % 7;
+	CALL	_rand
+	LD	BC,7
+	CALL	__irems
+	LD	(IX+12),HL
+;  393		}
+L_182:
+;  394		/*making the new tile from a random number*/
+;  395		switch (num) {
+	LD	BC,(IX+12)
+L__147:
+	LD	HL,6
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_183
+	LD	HL,BC
+	ADD	HL,HL
+	ADD	HL,HL
+	OR	A,A
+	SBC	HL,BC
+	LD	BC,L__146
+	ADD	HL,BC
+	LD	HL,(HL)
+	JP	(HL)
+L__146:
+	DW24	L_174	
+
+	DW24	L_175	
+
+	DW24	L_176	
+
+	DW24	L_177	
+
+	DW24	L_178	
+
+	DW24	L_179	
+
+	DW24	L_180	
+
+;  396		case 0:
+L_174:
+;  397			/*2
+;  398			13
+;  399			4*/
+;  400			xar[1] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  401			yar[1] = -16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,16777200
+	LD	(HL),BC
+;  402			xar[2] = 16;
+	LD	IY,(IX+6)
+	LEA	HL,IY+6
+	LD	BC,16
+	LD	(HL),BC
+;  403			yar[2] = 0;
+	LD	IY,(IX+9)
+	LEA	HL,IY+6
+	LD	BC,0
+	LD	(HL),BC
+;  404			xar[3] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+9
+	LD	(HL),BC
+;  405			yar[3] = 16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  406			break;
+	JR	L_183
+;  407		case 1:
+L_175:
+;  408			/*2
+;  409			1
+;  410			3
+;  411			4*/
+;  412			xar[1] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  413			xar[2] = 0;
+	LEA	HL,IY+6
+	LD	(HL),BC
+;  414			xar[3] = 0;
+	LEA	HL,IY+9
+	LD	(HL),BC
+;  415			yar[1] = -16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,16777200
+	LD	(HL),BC
+;  416			yar[2] = 16;
+	LEA	HL,IY+6
+	LD	BC,16
+	LD	(HL),BC
+;  417			yar[3] = 32;
+	LEA	HL,IY+9
+	LD	BC,32
+	LD	(HL),BC
+;  418			break;
+	JR	L_183
+;  419		case 2:
+L_176:
+;  420			/*
+;  421			12
+;  422			34*/
+;  423			xar[1] = 16;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,16
+	LD	(HL),BC
+;  424			xar[2] = 0;
+	LEA	HL,IY+6
+	LD	BC,0
+	LD	(HL),BC
+;  425			xar[3] = 16;
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  426			yar[1] = 0;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  427			yar[2] = 16;
+	LEA	HL,IY+6
+	LD	BC,16
+	LD	(HL),BC
+;  428			yar[3] = 16;
+	LEA	HL,IY+9
+	LD	(HL),BC
+;  429			break;
+	JR	L_183
+;  430		case 3:
+L_177:
+;  431			/*
+;  432			23
+;  433			1
+;  434			4*/
+;  435			xar[1] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  436			yar[1] = -16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,16777200
+	LD	(HL),BC
+;  437			yar[2] = -16;
+	LEA	HL,IY+6
+	LD	(HL),BC
+;  438			xar[2] = 16;
+	LD	IY,(IX+6)
+	LEA	HL,IY+6
+	LD	BC,16
+	LD	(HL),BC
+;  439			xar[3] = 0;
+	LEA	HL,IY+9
+	LD	BC,0
+	LD	(HL),BC
+;  440			yar[3] = 16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  441			break;
+	JR	L_183
+;  442		case 4:
+L_178:
+;  443			/*
+;  444			32
+;  445			1
+;  446			4*/
+;  447			xar[1] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  448			xar[2] = -16;
+	LEA	HL,IY+6
+	LD	BC,16777200
+	LD	(HL),BC
+;  449			xar[3] = 0;
+	LEA	HL,IY+9
+	LD	BC,0
+	LD	(HL),BC
+;  450			yar[1] = -16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,16777200
+	LD	(HL),BC
+;  451			yar[2] = -16;
+	LEA	HL,IY+6
+	LD	(HL),BC
+;  452			yar[3] = 16;
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  453			break;
+	JR	L_183
+;  454		case 5:
+L_179:
+;  455			/*32
+;  456			14*/
+;  457			xar[1] = 0;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  458			xar[2] = -16;
+	LEA	HL,IY+6
+	LD	BC,16777200
+	LD	(HL),BC
+;  459			xar[3] = 16;
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  460			yar[1] = -16;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,16777200
+	LD	(HL),BC
+;  461			yar[2] = -16;
+	LEA	HL,IY+6
+	LD	(HL),BC
+;  462			yar[3] = 0;
+	LEA	HL,IY+9
+	LD	BC,0
+	LD	(HL),BC
+;  463			break;
+	JR	L_183
+;  464		case 6:
+L_180:
+;  465			/*3
+;  466			12
+;  467			4*/
+;  468			xar[1] = 16;
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	BC,16
+	LD	(HL),BC
+;  469			xar[2] = 0;
+	LEA	HL,IY+6
+	LD	BC,0
+	LD	(HL),BC
+;  470			xar[3] = 16;
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  471			yar[1] = 0;
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	BC,0
+	LD	(HL),BC
+;  472			yar[2] = -16;
+	LEA	HL,IY+6
+	LD	BC,16777200
+	LD	(HL),BC
+;  473			yar[3] = 16;
+	LEA	HL,IY+9
+	LD	BC,16
+	LD	(HL),BC
+;  474			break;
+;  475		default:
+;  476			break;
+;  477		}
+L_183:
+;  478		xar[0] = num;
+	LD	HL,(IX+6)
+	LD	BC,(IX+12)
+	LD	(HL),BC
+;  479	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _setp ***************************
+;Name                         Addr/Register   Size   Type
+;_rand                               IMPORT  -----   function
+;num                                  IX+12      3   parameter
+;yar                                   IX+9      3   parameter
+;xar                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 15 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  480	//int setr(int arr[4], int cl,)
+;  481	void piecedraw(signed int *xarr, signed int *yarr, int ex, int why)
+;  482	{
+_piecedraw:
+	CALL	__frameset0
+;  483		gfx_FillRectangle(ex, why, 16, 16);
+	LD	BC,16
+	PUSH	BC
+	PUSH	BC
+	LD	BC,(IX+15)
+	PUSH	BC
+	LD	BC,(IX+12)
+	PUSH	BC
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  484		gfx_FillRectangle(ex + xarr[1], why + yarr[1], 16, 16);
+	LD	BC,16
+	PUSH	BC
+	PUSH	BC
+	LD	IY,(IX+9)
+	LEA	HL,IY+3
+	LD	HL,(HL)
+	LD	BC,(IX+15)
+	ADD	HL,BC
+	PUSH	HL
+	LD	IY,(IX+6)
+	LEA	HL,IY+3
+	LD	HL,(HL)
+	LD	BC,(IX+12)
+	ADD	HL,BC
+	PUSH	HL
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  485		gfx_FillRectangle(ex + xarr[2], why + yarr[2], 16, 16);
+	LD	BC,16
+	PUSH	BC
+	PUSH	BC
+	LD	IY,(IX+9)
+	LEA	HL,IY+6
+	LD	HL,(HL)
+	LD	BC,(IX+15)
+	ADD	HL,BC
+	PUSH	HL
+	LD	IY,(IX+6)
+	LEA	HL,IY+6
+	LD	HL,(HL)
+	LD	BC,(IX+12)
+	ADD	HL,BC
+	PUSH	HL
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;  486		gfx_FillRectangle(ex + xarr[3], why + yarr[3], 16, 16);
+	LD	BC,16
+	PUSH	BC
+	PUSH	BC
+	LD	IY,(IX+9)
+	LEA	HL,IY+9
+	LD	HL,(HL)
+	LD	BC,(IX+15)
+	ADD	HL,BC
+	PUSH	HL
+	LD	IY,(IX+6)
+	LEA	HL,IY+9
+	LD	HL,(HL)
+	LD	BC,(IX+12)
+	ADD	HL,BC
+	PUSH	HL
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _piecedraw ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_FillRectangle                  IMPORT  -----   function
+;why                                  IX+15      3   parameter
+;ex                                   IX+12      3   parameter
+;yarr                                  IX+9      3   parameter
+;xarr                                  IX+6      3   parameter
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _tilemap_map:ROM
+	XREF _tiles_gfx_pal:ROM
+	XREF _set_tiles_data:ROM
+	XREF _gfx_SetMonospaceFont:ROM
+	XREF _gfx_SetTextXY:ROM
+	XREF _gfx_PrintStringXY:ROM
+	XREF _gfx_PrintUInt:ROM
+	XREF _gfx_PrintInt:ROM
+	XREF _gfx_SwapDraw:ROM
+	XREF _gfx_SetDraw:ROM
+	XREF _gfx_FillRectangle:ROM
+	XREF _gfx_FillScreen:ROM
+	XREF _gfx_SetPalette:ROM
+	XREF _gfx_SetTransparentColor:ROM
+	XREF _gfx_SetColor:ROM
+	XREF _gfx_TilePtr:ROM
+	XREF _gfx_Tilemap:ROM
+	XREF _gfx_End:ROM
+	XREF _gfx_Begin:ROM
+	XREF _rand:ROM
+	XREF _srand:ROM
+	XREF _os_GetCSC:ROM
+	XREF __ineg:ROM
+	XREF __irems:ROM
+	XREF __ildix:ROM
+	XREF __istix:ROM
+	XREF __frameset0:ROM
+	XREF __frameset:ROM
+	XREF __scmpzero:ROM
+	XREF __ishru_b:ROM
+	XDEF _piecedraw
+	XDEF _setp
+	XDEF _main
+	END

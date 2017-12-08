@@ -1,0 +1,17 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -nomodsect -optspeed -noreduceopt -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"..\..\..\DOCUME~1\GFX_TI~1\SRC\GFX\BLOCKONE.C"
+	.assume ADL=1
+	SEGMENT DATA
+_blockone_pal:
+	DW	65535
+	DW	20903
+	DW	0
+	XDEF _blockone_pal
+;    1	// Converted using ConvPNG
+;    2	#include <stdint.h>
+;    3	#include "blockone.h"
+;    4	
+;    5	uint16_t blockone_pal[3] = {
+	END

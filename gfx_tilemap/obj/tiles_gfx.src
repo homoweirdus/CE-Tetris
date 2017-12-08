@@ -1,0 +1,21 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -nomodsect -optspeed -noreduceopt -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"..\..\..\DOCUME~1\GFX_TI~1\SRC\GFX\TILES_GFX.C"
+	.assume ADL=1
+	SEGMENT DATA
+_tiles_gfx_pal:
+	DW	32546
+	DW	7860
+	DW	844
+	DW	0
+	DW	20903
+	DW	65535
+	DW	0
+	XDEF _tiles_gfx_pal
+;    1	// Converted using ConvPNG
+;    2	#include <stdint.h>
+;    3	#include "tiles_gfx.h"
+;    4	
+;    5	uint16_t tiles_gfx_pal[7] = {
+	END
